@@ -1,6 +1,9 @@
 postgres:
 	docker run --name bankapp -e POSTGRES_PASSWORD=postgres -e POSTGRES_USER=postgres -p 5432:5432 -d postgres
 
+postgres_start:
+	docker start bankapp
+
 createdb:
 	docker exec -it bankapp createdb --username=postgres --owner=postgres simple_bank
 
@@ -16,4 +19,7 @@ migratedown:
 sqlc:
 	sqlc generate
 
-.PHONY: postgres createdb dropdb migrateup migratedown sqlc
+test:
+	go test -v -cover ./...
+
+.PHONY: postgres postgres_start createdb dropdb migrateup migratedown sqlc
