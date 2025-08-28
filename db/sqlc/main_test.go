@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 	"testing"
+
 	_ "github.com/lib/pq"
 )
 
@@ -16,17 +17,18 @@ const (
 
 // is required by every function made using sqlc
 var testQueries *Queries
+var testDB *sql.DB
 
-func TestMain(m *testing.M){
-	var conn *sql.DB
-	conn, err := sql.Open(dbDriver, dbSource) // returns a connection object
+func TestMain(m *testing.M) {
+	var err error
+	testDB, err = sql.Open(dbDriver, dbSource) // returns a connection object
 
 	if err != nil {
 		log.Fatal("Error while connecting to db: ", err)
 	}
 
-	testQueries = New(conn) //New is defined in the db.go file which creates the Queries object
+	testQueries = New(testDB) //New is defined in the db.go file which creates the Queries object
 
 	os.Exit(m.Run())
 
-} 
+}
