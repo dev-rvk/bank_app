@@ -6,13 +6,8 @@ import (
 	"os"
 	"testing"
 
+	"github.com/devrvk/simplebank/util"
 	_ "github.com/lib/pq"
-)
-
-// change to env variable
-const (
-	dbDriver = "postgres"
-	dbSource = "postgres://postgres:postgres@localhost:5432/simple_bank?sslmode=disable"
 )
 
 // is required by every function made using sqlc
@@ -21,7 +16,13 @@ var testDB *sql.DB
 
 func TestMain(m *testing.M) {
 	var err error
-	testDB, err = sql.Open(dbDriver, dbSource) // returns a connection object
+	config, err := util.LoadConfig("../..")
+	if err != nil {
+		log.Fatal("Error reading config file:", err)
+	}
+
+	
+	testDB, err = sql.Open(config.DBDriver, config.DBSource) // returns a connection object
 
 	if err != nil {
 		log.Fatal("Error while connecting to db: ", err)

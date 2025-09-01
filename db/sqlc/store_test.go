@@ -23,7 +23,7 @@ func TestTransferTx(t *testing.T) {
 	results := make(chan TransferTxResults)
 
 	// do 5 transactions as go routines pass in the return err and result over channel to the main
-	for i := 0; i < n; i++{
+	for range n{
 		go func() {
 			result, err := store.TransferTx(context.Background(), TransferTxParams{
 				FromAccountID: account1.ID,
@@ -37,7 +37,7 @@ func TestTransferTx(t *testing.T) {
 
 	existed := make(map[int]bool)
 	// for each transaction, check the results and errors
-	for i:= 0; i < n; i++{
+	for range n{
 
 		// check for no errors
 		err := <- errs

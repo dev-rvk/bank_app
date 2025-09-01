@@ -4,6 +4,7 @@
 - Go (Gin) for server
 - PostgreSQL for Database (using docker)
 - SQLC (ORM for using the db)
+- Viper (env Variables)
 
 
 
