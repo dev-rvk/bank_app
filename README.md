@@ -5,7 +5,7 @@
 - PostgreSQL for Database (using docker)
 - SQLC (ORM for using the db)
 - Viper (env Variables)
-
+- gomock (to mock the database and test api)
 
 
 
@@ -60,4 +60,15 @@ migrate -path db/migration -database "postgres://postgres:postgres@localhost:543
 1) initialize the project
 ```
 go mod init github.com/devrvk/simplebank
+```
+
+### gomock testing
+
+1) generate the mock 
+```
+mockgen -package mockdb -destination db/mock/mock.go github.com/devrvk/simplebank/db/sqlc Store 
+```
+
+```
+mockgen -package <package name in output> -destination <folder where the mock db is generated> <DB package location > < Interface to mock name>
 ```

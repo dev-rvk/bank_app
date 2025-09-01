@@ -7,12 +7,12 @@ import (
 
 // server struct contains a server router and store
 type Server struct {
-	store *db.Store
+	store db.Store
 	router *gin.Engine
 }
 
 // constructor for the server struct with routes initialized
-func NewServer (store *db.Store) *Server {
+func NewServer (store db.Store) *Server {
 
 	// takes store from arguments and uses gin Default router
 	server := &Server{store: store}

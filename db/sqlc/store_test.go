@@ -110,6 +110,7 @@ func TestTransferTx(t *testing.T) {
 	updatedAccount2, err := store.GetAccount(context.Background(), account2.ID)
 	require.NoError(t, err)
 	fmt.Println(">> after: ", updatedAccount1.Balance, updatedAccount2.Balance)
+
 	// check balance
 	require.Equal(t, account1.Balance - int64(n) * amount, updatedAccount1.Balance)
 	require.Equal(t, account2.Balance + int64(n) * amount, updatedAccount2.Balance)
