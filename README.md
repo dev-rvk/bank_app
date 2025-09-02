@@ -72,3 +72,15 @@ mockgen -package mockdb -destination db/mock/mock.go github.com/devrvk/simpleban
 ```
 mockgen -package <package name in output> -destination <folder where the mock db is generated> <DB package location > < Interface to mock name>
 ```
+
+### add user table using migrate
+
+1) generate the table migration versions
+
+```
+migrate create -ext sql -dir db/migration -seq add_users
+```
+
+2) fill up the up and down scripts
+
+3) update the make file to add one version up and down scripts

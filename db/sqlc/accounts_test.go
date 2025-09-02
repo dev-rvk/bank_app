@@ -11,10 +11,10 @@ import (
 )
 
 func createRandAccount(t *testing.T) Account {
-
+	user := createRandUser(t)
 	// testing data
 	arg := CreateAccountParams{
-		Owner: util.RandOwner(),
+		Owner: user.Username,
 		Balance: util.RandBalance(),
 		Currency: util.RandCurrency(),
 	}

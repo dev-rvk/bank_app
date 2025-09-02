@@ -1,6 +1,7 @@
 package util
 
 import (
+	"fmt"
 	"math/rand"
 	"strings"
 	"time"
@@ -48,4 +49,9 @@ func RandStr(len int) string {
 		randStr.WriteByte(char)
 	}
 	return randStr.String() 
+}
+
+// function that returns random email
+func RandEmail () string{
+	return fmt.Sprintf("%s@email.com", RandStr(6))
 }
