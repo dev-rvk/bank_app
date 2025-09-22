@@ -13,50 +13,51 @@ import (
 
 // server struct contains a server router and store
 type Server struct {
-	config util.Config
-	store db.Store
+	config     util.Config
+	store      db.Store
 	tokenMaker token.Maker
-	router *gin.Engine
+	router     *gin.Engine
 }
 
 // constructor for the server struct with routes initialized
-func NewServer (config util.Config, store db.Store) (*Server, error) {
+func NewServer(config util.Config, store db.Store) (*Server, error) {
 
 	tokenMaker, err := token.NewPasetoMaker(config.TokenSymmetricKey)
-	if err != nil{
+	if err != nil {
 		return nil, fmt.Errorf("cannot create token maker error: %w", err)
 	}
 
 	// custom validator for currency
-	if v, ok := binding.Validator.Engine().(*validator.Validate); ok{
+	if v, ok := binding.Validator.Engine().(*validator.Validate); ok {
 		v.RegisterValidation("currency", validCurrency)
 	}
 
 	// takes store from arguments and uses gin Default router
 	server := &Server{
-		store: store,
-		config: config,
+		store:      store,
+		config:     config,
 		tokenMaker: tokenMaker,
 	}
-	
+
 	server.setupRouter()
 
 	// returns server object of type Server contains store and router
 	return server, nil
 }
 
-func (server *Server) setupRouter(){
+func (server *Server) setupRouter() {
 	router := gin.Default()
-	
+
 	router.POST("/users", server.createUser)
 	router.POST("/users/login", server.loginUser)
 
+	authRoutes := router.Group("/").Use(authMiddleware(server.tokenMaker))
 	// define route
-	router.POST("/accounts", server.createAccount)
-	router.GET("/accounts/:id", server.getAccount)
-	router.GET("/accounts", server.listAccount)
+	authRoutes.POST("/accounts", server.createAccount)
+	authRoutes.GET("/accounts/:id", server.getAccount)
+	authRoutes.GET("/accounts", server.listAccount)
 
-	router.POST("/transfers", server.createTransfer)
+	authRoutes.POST("/transfers", server.createTransfer)
 
 	// server instance router uses the router as gin.Default()
 	server.router = router

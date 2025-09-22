@@ -14,8 +14,8 @@ func createRandAccount(t *testing.T) Account {
 	user := createRandUser(t)
 	// testing data
 	arg := CreateAccountParams{
-		Owner: user.Username,
-		Balance: util.RandBalance(),
+		Owner:    user.Username,
+		Balance:  util.RandBalance(),
 		Currency: util.RandCurrency(),
 	}
 
@@ -23,7 +23,6 @@ func createRandAccount(t *testing.T) Account {
 	// CreateAccount() is a function used in the testQueries struct which is executed for testing
 	account, err := testQueries.CreateAccount(context.Background(), arg)
 
-	
 	// we use require to check for errors, compare values, itc from the testify package
 
 	require.NoError(t, err)
@@ -40,7 +39,7 @@ func createRandAccount(t *testing.T) Account {
 
 }
 
-func TestCreateAccount(t *testing.T){
+func TestCreateAccount(t *testing.T) {
 	createRandAccount(t)
 }
 
@@ -64,7 +63,7 @@ func TestUpdateAccount(t *testing.T) {
 	account1 := createRandAccount(t)
 
 	args := UpdateAccountParams{
-		ID: account1.ID,
+		ID:      account1.ID,
 		Balance: util.RandBalance(),
 	}
 
@@ -79,7 +78,7 @@ func TestUpdateAccount(t *testing.T) {
 	require.Equal(t, account2.Owner, account1.Owner)
 
 	require.WithinDuration(t, account1.CreatedAt, account2.CreatedAt, time.Second)
-	
+
 }
 
 func TestDeleteAccount(t *testing.T) {
@@ -98,22 +97,25 @@ func TestDeleteAccount(t *testing.T) {
 }
 
 func TestListAccounts(t *testing.T) {
-	for i:= 0; i < 10; i++ {
-		createRandAccount(t)
+	var lastAccount Account
+	for i := 0; i < 10; i++ {
+		lastAccount = createRandAccount(t)
 	}
 
-	arg := ListAccountParams{
-		Limit: 5,
-		Offset: 5,
+	arg := ListAccountsParams{
+		Owner:  lastAccount.Owner,
+		Limit:  5,
+		Offset: 0,
 	}
 
-	accounts, err := testQueries.ListAccount(context.Background(), arg)
+	accounts, err := testQueries.ListAccounts(context.Background(), arg)
 
 	require.NoError(t, err)
-	require.Len(t, accounts, 5)
+	require.NotEmpty(t, accounts)
 
-	for _, account := range accounts{
+	for _, account := range accounts {
 		require.NotEmpty(t, account)
+		require.Equal(t, lastAccount.Owner, account.Owner)
 	}
 
 }
