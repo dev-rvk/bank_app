@@ -206,3 +206,12 @@ docker container inspect bankapp
 ...
 ```
 3) replace the DB_SOURCE (pass through the command line args) change `localhost` to `bankapp` (container name of DB)
+
+-- Way 3
+1) Setup docker compose file (creates a network by default and we can use service name directly in the url)
+
+NOTE:
+
+- Docker compose already runs all the services in one network so no need to create a network
+- We need to add wait-for script to migrate the db after the postgres container starts.
+- 
